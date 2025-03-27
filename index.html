@@ -700,8 +700,7 @@
             opacity: 1;
         }
 
-        .memoir-viewer::before {
-            content: '';
+        .loading-indicator {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -716,7 +715,7 @@
             transition: opacity 0.3s ease;
         }
 
-        .memoir-viewer img.loaded + .memoir-viewer::before {
+        .memoir-viewer img.loaded + .loading-indicator {
             opacity: 0;
         }
 
@@ -1256,6 +1255,7 @@
             </div>
             <div class="memoir-viewer">
                 <img id="memoirPage" src="" alt="Page du mémoire">
+                <div class="loading-indicator"></div>
             </div>
         </div>
     </div>
@@ -1985,12 +1985,6 @@
                 }
             }
         }
-
-        // Gestion du chargement du PDF
-        document.getElementById('memoirPdf').addEventListener('load', function() {
-            this.classList.add('loaded');
-            document.querySelector('.pdf-loading').style.display = 'none';
-        });
 
         // Gestion du chargement des images du mémoire
         document.getElementById('memoirPage').addEventListener('load', function() {
