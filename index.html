@@ -4,6 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eugène Glorian-Rachdi | Designer Métallier</title>
+    
+    <!-- Balises meta pour le SEO -->
+    <meta name="description" content="Eugène Glorian-Rachdi, designer métallier diplômé de l'École Boulle. Découvrez mes créations en métal, mes expérimentations et mon mémoire sur le design métallique.">
+    <meta name="keywords" content="Eugène Glorian-Rachdi, designer métallier, École Boulle, design métallique, art cinétique, zootrope, dinanderie">
+    <meta name="author" content="Eugène Glorian-Rachdi">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://eugeneglorianrachdi.fr/">
+    <meta property="og:title" content="Eugène Glorian-Rachdi | Designer Métallier">
+    <meta property="og:description" content="Portfolio de Eugène Glorian-Rachdi, designer métallier diplômé de l'École Boulle. Découvrez mes créations en métal et mes expérimentations.">
+    <meta property="og:image" content="https://eugeneglorianrachdi.fr/assets/images/compressed (4)/point-de-bascule.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://eugeneglorianrachdi.fr/">
+    <meta property="twitter:title" content="Eugène Glorian-Rachdi | Designer Métallier">
+    <meta property="twitter:description" content="Portfolio de Eugène Glorian-Rachdi, designer métallier diplômé de l'École Boulle. Découvrez mes créations en métal et mes expérimentations.">
+    <meta property="twitter:image" content="https://eugeneglorianrachdi.fr/assets/images/compressed (4)/point-de-bascule.jpg">
+
+    <!-- Données structurées -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Eugène Glorian-Rachdi",
+        "url": "https://eugeneglorianrachdi.fr",
+        "image": "https://eugeneglorianrachdi.fr/assets/images/compressed (4)/point-de-bascule.jpg",
+        "sameAs": [
+            "https://www.instagram.com/eugossocuzn"
+        ],
+        "jobTitle": "Designer Métallier",
+        "worksFor": {
+            "@type": "Organization",
+            "name": "École Boulle"
+        },
+        "description": "Designer métallier diplômé de l'École Boulle, spécialisé dans le design métallique et l'art cinétique.",
+        "email": "eugene.glorian@gmail.com",
+        "telephone": "+33624754025"
+    }
+    </script>
+
     <style>
         :root {
             --primary-color: #00ff9d;
@@ -644,6 +686,7 @@
             background: transparent;
             overflow: hidden;
             height: 80vh;
+            position: relative;
         }
 
         .memoir-viewer iframe {
@@ -651,6 +694,41 @@
             height: 100%;
             border: none;
             background: transparent;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .memoir-viewer iframe.loaded {
+            opacity: 1;
+        }
+
+        .pdf-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .pdf-loading::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: #00ff9d;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Style spécifique pour les images du projet Point de bascule */
@@ -1150,6 +1228,7 @@
         <button class="close-modal" onclick="closeMemoirModal()">×</button>
         <div class="modal-content">
             <div class="memoir-viewer">
+                <div class="pdf-loading">Chargement du mémoire...</div>
                 <iframe id="memoirPdf" src="assets/memoire.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf"></iframe>
             </div>
         </div>
@@ -1789,6 +1868,12 @@
                 }
             }
         }
+
+        // Gestion du chargement du PDF
+        document.getElementById('memoirPdf').addEventListener('load', function() {
+            this.classList.add('loaded');
+            document.querySelector('.pdf-loading').style.display = 'none';
+        });
     </script>
 </body>
 </html>
