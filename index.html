@@ -847,10 +847,18 @@
             display: block;
             opacity: 0;
             transition: opacity 0.3s ease;
+            filter: blur(10px);
+            transform: scale(1.1);
         }
 
         .project-card img.loaded {
             opacity: 1;
+            filter: blur(0);
+            transform: scale(1);
+        }
+
+        .project-card img.loading {
+            background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
         }
 
         .project-card-content {
@@ -1391,14 +1399,35 @@
             }
         };
 
-        // Suppression du système de lazy loading complexe
+        // Optimisation du chargement des images
         document.addEventListener('DOMContentLoaded', function() {
-            // Configuration des images des cartes
-            document.querySelectorAll('.project-card').forEach(card => {
-                const img = card.querySelector('img');
-                if (img) {
-                    img.classList.add('loaded');
-                }
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (!img.classList.contains('loaded')) {
+                            img.classList.add('loading');
+                            img.onload = () => {
+                                img.classList.remove('loading');
+                                img.classList.add('loaded');
+                            };
+                        }
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '50px 0px',
+                threshold: 0.1
+            });
+
+            // Observer pour les images des cartes de projet
+            document.querySelectorAll('.project-card img').forEach(img => {
+                imageObserver.observe(img);
+            });
+
+            // Observer pour les images de la galerie
+            document.querySelectorAll('.gallery-image img').forEach(img => {
+                imageObserver.observe(img);
             });
         });
 
@@ -1773,6 +1802,28 @@
             return `${page.number * 2 - 2}-${page.number * 2 - 1}`; // Pages doubles (corrigé)
         }
 
+        // Système de préchargement des images du mémoire
+        let memoirImages = [];
+        let currentPreloadIndex = 0;
+        const preloadBatchSize = 5;
+
+        function preloadMemoirImages() {
+            const startIndex = currentPreloadIndex;
+            const endIndex = Math.min(startIndex + preloadBatchSize, memoirPages.length);
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                const img = new Image();
+                img.src = memoirPages[i].src;
+                memoirImages[i] = img;
+            }
+            
+            currentPreloadIndex = endIndex;
+            
+            if (currentPreloadIndex < memoirPages.length) {
+                setTimeout(preloadMemoirImages, 1000); // Précharger le prochain lot après 1 seconde
+            }
+        }
+
         function openMemoirModal() {
             const modal = document.getElementById('memoirModal');
             const pageImg = document.getElementById('memoirPage');
@@ -1781,11 +1832,24 @@
 
             if (modal && pageImg && currentPageSpan && totalPagesSpan) {
                 currentPageIndex = 0;
-                pageImg.src = memoirPages[currentPageIndex].src;
+                
+                // Utiliser l'image préchargée si disponible
+                if (memoirImages[currentPageIndex]) {
+                    pageImg.src = memoirImages[currentPageIndex].src;
+                } else {
+                    pageImg.src = memoirPages[currentPageIndex].src;
+                }
+                
                 currentPageSpan.textContent = getPageNumber(currentPageIndex);
-                totalPagesSpan.textContent = 54; // Total des pages (1 + 26*2 + 1)
+                totalPagesSpan.textContent = 54;
+                
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
+                
+                // Démarrer le préchargement si pas encore fait
+                if (memoirImages.length === 0) {
+                    preloadMemoirImages();
+                }
             }
         }
 
@@ -1816,7 +1880,12 @@
             const currentPageSpan = document.getElementById('currentPage');
             
             if (pageImg && currentPageSpan) {
-                pageImg.src = memoirPages[currentPageIndex].src;
+                // Utiliser l'image préchargée si disponible
+                if (memoirImages[currentPageIndex]) {
+                    pageImg.src = memoirImages[currentPageIndex].src;
+                } else {
+                    pageImg.src = memoirPages[currentPageIndex].src;
+                }
                 currentPageSpan.textContent = getPageNumber(currentPageIndex);
             }
         }
