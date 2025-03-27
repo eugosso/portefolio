@@ -1081,7 +1081,7 @@
                 </a>
             </div>
         </div>
-        <form class="contact-form" action="https://formsubmit.co/eugene.glorian@gmail.com" method="POST">
+        <form class="contact-form" id="contact-form">
             <div>
                 <label for="name">Nom</label>
                 <input type="text" id="name" name="name" required autocomplete="name">
@@ -1094,11 +1094,6 @@
                 <label for="message">Message</label>
                 <textarea id="message" name="message" required autocomplete="off"></textarea>
             </div>
-            <input type="hidden" name="_subject" value="Nouveau message depuis le site web">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_next" value="https://eugene-glorian.vercel.app/">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_autoresponse" value="Merci pour votre message ! Je vous répondrai dans les plus brefs délais.">
             <button type="submit">Envoyer</button>
         </form>
     </section>
@@ -1173,6 +1168,12 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("YOUR_PUBLIC_KEY"); // Vous devrez remplacer cette clé
+        })();
+    </script>
     <script>
         const observerOptions = {
             threshold: 0.1,
@@ -1866,6 +1867,28 @@
                 }
             }
         }
+
+        // Gestion du formulaire avec EmailJS
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Envoi en cours...';
+            
+            emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+                .then(function() {
+                    alert('Message envoyé avec succès !');
+                    document.getElementById('contact-form').reset();
+                }, function(error) {
+                    alert('Erreur lors de l\'envoi du message. Veuillez réessayer.');
+                    console.error('EmailJS error:', error);
+                })
+                .finally(function() {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Envoyer';
+                });
+        });
     </script>
 </body>
 </html>
