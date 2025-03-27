@@ -890,6 +890,68 @@
             position: relative;
             z-index: 2;
         }
+
+        .speed-control {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 100;
+        }
+
+        .speed-control label {
+            color: white;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        .speed-control input[type="range"] {
+            width: 100px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .speed-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #00ff9d;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .speed-control input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+        }
+
+        .speed-control input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #00ff9d;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .speed-control input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -1544,38 +1606,25 @@
             controlsContainer.style.backdropFilter = 'blur(20px)';
             controlsContainer.style.webkitBackdropFilter = 'blur(20px)';
 
-            // Slider de vitesse
-            const speedLabel = document.createElement('label');
-            speedLabel.textContent = 'Vitesse de rotation';
-            speedLabel.style.color = 'white';
-            speedLabel.style.fontSize = '14px';
-            speedLabel.style.marginRight = '10px';
-            controlsContainer.appendChild(speedLabel);
+            // Ajout du contrôle de vitesse
+            const speedControl = document.createElement('div');
+            speedControl.className = 'speed-control';
+            speedControl.innerHTML = `
+                <label>Vitesse de rotation</label>
+                <input type="range" min="0" max="2" step="0.1" value="1">
+                <span class="speed-hint">Ajustez la vitesse pour voir l'animation</span>
+            `;
+            container.appendChild(speedControl);
 
-            const speedSlider = document.createElement('input');
-            speedSlider.type = 'range';
-            speedSlider.min = '0';
-            speedSlider.max = '200';
-            speedSlider.step = '0.1';
-            speedSlider.value = '20';
-            speedSlider.style.width = '200px';
-            speedSlider.style.height = '4px';
-            speedSlider.style.webkitAppearance = 'none';
-            speedSlider.style.background = '#424245';
-            speedSlider.style.borderRadius = '2px';
-            speedSlider.style.outline = 'none';
-            speedSlider.style.transition = 'all 0.3s ease';
-            speedSlider.style.cursor = 'pointer';
-            speedSlider.oninput = (e) => {
-                controls.autoRotateSpeed = parseFloat(e.target.value);
-            };
-            speedSlider.onmouseover = () => {
-                speedSlider.style.background = '#2997ff';
-            };
-            speedSlider.onmouseout = () => {
-                speedSlider.style.background = '#424245';
-            };
-            controlsContainer.appendChild(speedSlider);
+            const speedInput = speedControl.querySelector('input[type="range"]');
+            const speedHint = speedControl.querySelector('.speed-hint');
+            
+            speedInput.addEventListener('input', function() {
+                const speed = parseFloat(this.value);
+                if (model) {
+                    model.rotation.y = speed;
+                }
+            });
 
             // Animation
             let lastTime = 0;
