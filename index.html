@@ -1619,7 +1619,7 @@
             speedControl.className = 'speed-control';
             speedControl.innerHTML = `
                 <label>Vitesse de rotation</label>
-                <input type="range" min="0" max="2" step="0.1" value="1">
+                <input type="range" min="0" max="200" step="1" value="20">
                 <span class="speed-hint">Ajustez la vitesse pour voir l'animation</span>
             `;
             container.appendChild(speedControl);
@@ -1630,7 +1630,7 @@
             speedInput.addEventListener('input', function() {
                 const speed = parseFloat(this.value);
                 if (model) {
-                    model.rotation.y = speed;
+                    controls.autoRotateSpeed = speed;
                 }
             });
 
@@ -1861,6 +1861,27 @@
                 }
             }
         }
+
+        // Gestion du formulaire de contact
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Création du lien mailto avec les informations du formulaire
+            const mailtoLink = `mailto:eugene.glorian@gmail.com?subject=Message de ${name}&body=${encodeURIComponent(message)}%0A%0A---%0AEnvoyé depuis le site web%0AEmail de l'expéditeur: ${email}`;
+            
+            // Ouverture du client mail par défaut
+            window.location.href = mailtoLink;
+            
+            // Réinitialisation du formulaire
+            this.reset();
+            
+            // Message de confirmation
+            alert('Votre message va être envoyé. Merci de votre intérêt !');
+        });
     </script>
 </body>
 </html>
