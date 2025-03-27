@@ -643,17 +643,14 @@
             margin: 0 auto;
             background: transparent;
             overflow: hidden;
+            height: 80vh;
         }
 
-        .memoir-viewer img {
-            width: 95%;
-            height: auto;
-            max-height: 90vh;
-            object-fit: contain;
-            display: block;
+        .memoir-viewer iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
             background: transparent;
-            padding: 0;
-            margin: 0 auto;
         }
 
         /* Style spécifique pour les images du projet Point de bascule */
@@ -847,14 +844,10 @@
             display: block;
             opacity: 0;
             transition: opacity 0.3s ease;
-            filter: blur(10px);
-            transform: scale(1.1);
         }
 
         .project-card img.loaded {
             opacity: 1;
-            filter: blur(0);
-            transform: scale(1);
         }
 
         .project-card img.loading {
@@ -1156,17 +1149,8 @@
     <div id="memoirModal" class="modal">
         <button class="close-modal" onclick="closeMemoirModal()">×</button>
         <div class="modal-content">
-            <div class="memoir-navigation">
-                <button class="nav-button prev" onclick="prevPage()">←</button>
-                <span class="page-counter">Page <span id="currentPage">1</span> sur <span id="totalPages">1</span></span>
-                <button class="nav-button next" onclick="nextPage()">→</button>
-            </div>
-            <div class="page-selector">
-                <input type="number" id="pageInput" min="1" max="54" value="1">
-                <button onclick="goToPage(parseInt(document.getElementById('pageInput').value))">Aller à la page</button>
-            </div>
             <div class="memoir-viewer">
-                <img id="memoirPage" src="" alt="Page du mémoire">
+                <iframe id="memoirPdf" src="assets/memoire.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf"></iframe>
             </div>
         </div>
     </div>
@@ -1762,94 +1746,11 @@
             renderer.setSize(container.clientWidth, container.clientHeight);
         }
 
-        const memoirPages = [
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg.jpg', number: 1 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg2.jpg', number: 2 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg3.jpg', number: 3 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg4.jpg', number: 4 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg5.jpg', number: 5 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg6.jpg', number: 6 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg7.jpg', number: 7 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg8.jpg', number: 8 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg9.jpg', number: 9 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg10.jpg', number: 10 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg11.jpg', number: 11 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg12.jpg', number: 12 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg13.jpg', number: 13 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg14.jpg', number: 14 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg15.jpg', number: 15 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg16.jpg', number: 16 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg17.jpg', number: 17 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg18.jpg', number: 18 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg19.jpg', number: 19 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg20.jpg', number: 20 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg21.jpg', number: 21 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg22.jpg', number: 22 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg23.jpg', number: 23 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg24.jpg', number: 24 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg25.jpg', number: 25 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg26.jpg', number: 26 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg27.jpg', number: 27 },
-            { src: 'assets/images/memoire version jpeg/memoire version jpeg28.jpg', number: 28 }
-        ];
-
-        let currentPageIndex = 0;
-
-        function getPageNumber(index) {
-            const page = memoirPages[index];
-            if (index === 0) return 1; // Première page seule
-            if (index === memoirPages.length - 1) return 54; // Dernière page seule
-            return `${page.number * 2 - 2}-${page.number * 2 - 1}`; // Pages doubles (corrigé)
-        }
-
-        // Système de préchargement des images du mémoire
-        let memoirImages = [];
-        let currentPreloadIndex = 0;
-        const preloadBatchSize = 5;
-
-        function preloadMemoirImages() {
-            const startIndex = currentPreloadIndex;
-            const endIndex = Math.min(startIndex + preloadBatchSize, memoirPages.length);
-            
-            for (let i = startIndex; i < endIndex; i++) {
-                const img = new Image();
-                img.src = memoirPages[i].src;
-                memoirImages[i] = img;
-            }
-            
-            currentPreloadIndex = endIndex;
-            
-            if (currentPreloadIndex < memoirPages.length) {
-                setTimeout(preloadMemoirImages, 1000); // Précharger le prochain lot après 1 seconde
-            }
-        }
-
         function openMemoirModal() {
             const modal = document.getElementById('memoirModal');
-            const pageImg = document.getElementById('memoirPage');
-            const currentPageSpan = document.getElementById('currentPage');
-            const totalPagesSpan = document.getElementById('totalPages');
-
-            if (modal && pageImg && currentPageSpan && totalPagesSpan) {
-                currentPageIndex = 0;
-                
-                // Utiliser l'image préchargée si disponible
-                if (memoirImages[currentPageIndex]) {
-                    pageImg.src = memoirImages[currentPageIndex].src;
-                } else {
-                    pageImg.src = memoirPages[currentPageIndex].src;
-                }
-                
-                currentPageSpan.textContent = getPageNumber(currentPageIndex);
-                totalPagesSpan.textContent = 54;
-                
+            if (modal) {
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
-                
-                // Démarrer le préchargement si pas encore fait
-                if (memoirImages.length === 0) {
-                    preloadMemoirImages();
-                }
             }
         }
 
@@ -1861,57 +1762,10 @@
             }
         }
 
-        function prevPage() {
-            if (currentPageIndex > 0) {
-                currentPageIndex--;
-                updatePage();
-            }
-        }
-
-        function nextPage() {
-            if (currentPageIndex < memoirPages.length - 1) {
-                currentPageIndex++;
-                updatePage();
-            }
-        }
-
-        function updatePage() {
-            const pageImg = document.getElementById('memoirPage');
-            const currentPageSpan = document.getElementById('currentPage');
-            
-            if (pageImg && currentPageSpan) {
-                // Utiliser l'image préchargée si disponible
-                if (memoirImages[currentPageIndex]) {
-                    pageImg.src = memoirImages[currentPageIndex].src;
-                } else {
-                    pageImg.src = memoirPages[currentPageIndex].src;
-                }
-                currentPageSpan.textContent = getPageNumber(currentPageIndex);
-            }
-        }
-
-        function goToPage(pageNumber) {
-            if (pageNumber === 1) {
-                currentPageIndex = 0;
-            } else if (pageNumber === 54) {
-                currentPageIndex = memoirPages.length - 1;
-            } else {
-                currentPageIndex = Math.ceil((pageNumber + 1) / 2); // Corrigé pour la nouvelle numérotation
-            }
-            updatePage();
-        }
-
         // Navigation au clavier
         document.addEventListener('keydown', function(e) {
-            const modal = document.getElementById('memoirModal');
-            if (modal && modal.classList.contains('active')) {
-                if (e.key === 'ArrowLeft') {
-                    prevPage();
-                } else if (e.key === 'ArrowRight') {
-                    nextPage();
-                } else if (e.key === 'Escape') {
-                    closeMemoirModal();
-                }
+            if (e.key === 'Escape') {
+                closeMemoirModal();
             }
         });
 
