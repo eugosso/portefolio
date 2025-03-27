@@ -29,4 +29,4 @@ git clone https://github.com/votre-username/votre-username.github.io.git
 
 ## Déploiement
 
-Le site est automatiquement déployé via GitHub Pages à l'adresse : https://votre-username.github.io 
+Le site est automatiquement déployé via GitHub Pages à l'adresse :(https://eugeneglorianrachdi.fr)
