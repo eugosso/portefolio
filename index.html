@@ -897,8 +897,9 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: rgba(0, 0, 0, 0.7);
             padding: 10px 20px;
             border-radius: 20px;
@@ -951,6 +952,13 @@
         .speed-control input[type="range"]::-moz-range-thumb:hover {
             transform: scale(1.1);
             box-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+        }
+
+        .speed-hint {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
         }
     </style>
 </head>
