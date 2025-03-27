@@ -680,6 +680,7 @@
             margin: 0 auto;
             background: transparent;
             overflow: hidden;
+            position: relative;
         }
 
         .memoir-viewer img {
@@ -691,6 +692,32 @@
             background: transparent;
             padding: 0;
             margin: 0 auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .memoir-viewer img.loaded {
+            opacity: 1;
+        }
+
+        .memoir-viewer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 255, 157, 0.1);
+            border-radius: 50%;
+            border-top-color: #00ff9d;
+            animation: spin 1s linear infinite;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .memoir-viewer img.loaded + .memoir-viewer::before {
+            opacity: 0;
         }
 
         .pdf-loading {
@@ -1964,6 +1991,26 @@
             this.classList.add('loaded');
             document.querySelector('.pdf-loading').style.display = 'none';
         });
+
+        // Gestion du chargement des images du mémoire
+        document.getElementById('memoirPage').addEventListener('load', function() {
+            this.classList.add('loaded');
+        });
+
+        // Ajout de la fonction pour gérer le plein écran
+        function toggleFullscreen(imageContainer) {
+            if (!document.fullscreenElement) {
+                imageContainer.classList.add('fullscreen');
+                if (imageContainer.requestFullscreen) {
+                    imageContainer.requestFullscreen();
+                }
+            } else {
+                imageContainer.classList.remove('fullscreen');
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
     </script>
 </body>
 </html>
