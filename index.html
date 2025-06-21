@@ -684,11 +684,11 @@
             position: relative;
         }
 
-        .memoir-viewer object {
+        .memoir-viewer img {
             width: 100%;
             height: 100%;
-            border: none;
-            background: transparent;
+            object-fit: contain;
+            display: block;
         }
 
         .loading-indicator {
@@ -1110,6 +1110,29 @@
                 font-size: 14px;
             }
         }
+
+        .project-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin-bottom: 18px;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        .project-image img:last-child {
+            margin-bottom: 0;
+        }
+        .img-no-border {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            object-fit: cover !important;
+            width: 100% !important;
+            height: auto !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
     </style>
 </head>
 <body>
@@ -1143,7 +1166,7 @@
                 <h3>Point de bascule #8</h3>
                 <p>Une réinterprétation contemporaine du zootrope, fusionnant l'art cinétique et le travail du métal. Le projet fonctionne grâce à la persistance rétinienne et une lumière stroboscopique qui transforme la rotation de l'objet en animation.</p>
                 <div class="project-preview" onclick="openModal()">
-                    <img src="assets/images/compressed (4)/point-de-bascule.jpg" alt="Vue du dessus du Point de bascule #8">
+                    <img src="assets/images/vrai photo zootrope/7B02AB0D-3EF7-41BC-8DF5-4A851F7F8EC9.JPG" alt="Vue du dessus du Point de bascule #8">
                 </div>
             </div>
             <div class="diploma-card">
@@ -1265,12 +1288,15 @@
             </div>
             <div class="project-video">
                 <video loop muted autoplay playsinline>
-                    <source src="assets/videos/point de bascule rendu realiste.mp4" type="video/mp4">
+                    <source src="assets/videos/lancement a la main.mp4" type="video/mp4">
                     Votre navigateur ne supporte pas la lecture de cette vidéo.
                 </video>
             </div>
             <div class="project-image">
-                <img src="assets/images/compressed (4)/rendu.jpg" alt="Rendu du projet Point de bascule #8 avec des spectateurs">
+                <img src="assets/images/vrai photo zootrope/8F1988B0-5EE6-4D19-9BAD-2128C878C161.JPG" alt="Rendu du projet Point de bascule #8 avec des spectateurs">
+                <img src="assets/images/vrai photo zootrope/1D2B23A4-BD64-4AFB-8984-8E70CA14496B.JPG" alt="Photo supplémentaire 1 - Point de bascule #8">
+                <img src="assets/images/vrai photo zootrope/IMG_0304.png" alt="Photo supplémentaire 2 - Point de bascule #8">
+                <img class="img-no-border" src="assets/images/vrai photo zootrope/689AE1D7-6855-4612-ACB7-C6B6237BC250.JPG" alt="Photo supplémentaire 3 - Point de bascule #8">
             </div>
             <div class="model-section">
                 <div class="model-viewer-container" style="display: none;">
@@ -1298,18 +1324,15 @@
         <div class="modal-content">
             <div class="memoir-navigation">
                 <button class="nav-button" onclick="prevPage()">Précédent</button>
-                <span class="page-counter">Page <span id="currentPage">1</span> sur <span id="totalPages">54</span></span>
+                <span class="page-counter">Page <span id="currentPage">1</span> sur <span id="totalPages">28</span></span>
                 <button class="nav-button" onclick="nextPage()">Suivant</button>
             </div>
             <div class="page-selector">
-                <input type="number" id="pageInput" min="1" max="54" value="1" onchange="goToPage(this.value)">
+                <input type="number" id="pageInput" min="1" max="28" value="1" onchange="goToPage(this.value)">
                 <button onclick="goToPage(document.getElementById('pageInput').value)">Aller à la page</button>
             </div>
             <div class="memoir-viewer">
-                <object id="memoirPage" type="application/pdf" data="" width="100%" height="100%">
-                    <p>Votre navigateur ne peut pas afficher le PDF. <a href="" target="_blank">Télécharger le PDF</a></p>
-                </object>
-                <div class="loading-indicator"></div>
+                <img id="memoirPage" src="" alt="Page du mémoire">
             </div>
         </div>
     </div>
@@ -1543,34 +1566,43 @@
         };
 
         const memoirPages = [
-            { src: 'assets/images/compressed (5)/memoire-1.pdf', number: 1 },
-            { src: 'assets/images/compressed (5)/memoire-2.pdf', number: 2 },
-            { src: 'assets/images/compressed (5)/memoire-3.pdf', number: 3 },
-            { src: 'assets/images/compressed (5)/memoire-4.pdf', number: 4 },
-            { src: 'assets/images/compressed (5)/memoire-5.pdf', number: 5 },
-            { src: 'assets/images/compressed (5)/memoire-6.pdf', number: 6 },
-            { src: 'assets/images/compressed (5)/memoire-7.pdf', number: 7 },
-            { src: 'assets/images/compressed (5)/memoire-8.pdf', number: 8 },
-            { src: 'assets/images/compressed (5)/memoire-9.pdf', number: 9 },
-            { src: 'assets/images/compressed (5)/memoire-10.pdf', number: 10 },
-            { src: 'assets/images/compressed (5)/memoire-11.pdf', number: 11 },
-            { src: 'assets/images/compressed (5)/memoire-12.pdf', number: 12 },
-            { src: 'assets/images/compressed (5)/memoire-13.pdf', number: 13 },
-            { src: 'assets/images/compressed (5)/memoire-14.pdf', number: 14 },
-            { src: 'assets/images/compressed (5)/memoire-15.pdf', number: 15 },
-            { src: 'assets/images/compressed (5)/memoire-16.pdf', number: 16 },
-            { src: 'assets/images/compressed (5)/memoire-17.pdf', number: 17 },
-            { src: 'assets/images/compressed (5)/memoire-18.pdf', number: 18 },
-            { src: 'assets/images/compressed (5)/memoire-19.pdf', number: 19 },
-            { src: 'assets/images/compressed (5)/memoire-20.pdf', number: 20 },
-            { src: 'assets/images/compressed (5)/memoire-21.pdf', number: 21 },
-            { src: 'assets/images/compressed (5)/memoire-22.pdf', number: 22 },
-            { src: 'assets/images/compressed (5)/memoire-23.pdf', number: 23 },
-            { src: 'assets/images/compressed (5)/memoire-24.pdf', number: 24 },
-            { src: 'assets/images/compressed (5)/memoire-25.pdf', number: 25 },
-            { src: 'assets/images/compressed (5)/memoire-26.pdf', number: 26 },
-            { src: 'assets/images/compressed (5)/memoire-27.pdf', number: 27 },
-            { src: 'assets/images/compressed (5)/memoire-28.pdf', number: 28 }
+            'assets/images/memoire version jpeg/memoire version jpeg1.jpg',
+            'assets/images/memoire version jpeg/memoire version jpeg2.jpg',
+            'assets/images/memoire version jpeg/memoire version jpeg3.jpg',
+            'assets/images/memoire version jpeg/memoire version jpeg4.jpg',
+            'assets/images/memoire version jpeg/memoire version jpeg5.jpg',
+            'assets/images/memoire version jpeg/memoire version jpeg6.jpg',
+            'assets/images/memoire version jpeg/memoire version jpeg7.jpg',
+            'assets/images/memoire version jpeg/memoire version jpeg8.jpg',
+            'assets/images/memoire version jpeg/memoire version jpeg9.jpg',
+            'assets/images/memoire pdf page par page/page1.jpg',
+            'assets/images/memoire pdf page par page/page2.jpg',
+            'assets/images/memoire pdf page par page/page3.jpg',
+            'assets/images/memoire pdf page par page/page4.jpg',
+            'assets/images/memoire pdf page par page/page5.jpg',
+            'assets/images/memoire pdf page par page/page6.jpg',
+            'assets/images/memoire pdf page par page/page7.jpg',
+            'assets/images/memoire pdf page par page/page8.jpg',
+            'assets/images/memoire pdf page par page/page9.jpg',
+            'assets/images/memoire pdf page par page/page10.jpg',
+            'assets/images/memoire pdf page par page/page11.jpg',
+            'assets/images/memoire pdf page par page/page12.jpg',
+            'assets/images/memoire pdf page par page/page13.jpg',
+            'assets/images/memoire pdf page par page/page14.jpg',
+            'assets/images/memoire pdf page par page/page15.jpg',
+            'assets/images/memoire pdf page par page/page16.jpg',
+            'assets/images/memoire pdf page par page/page17.jpg',
+            'assets/images/memoire pdf page par page/page18.jpg',
+            'assets/images/memoire pdf page par page/page19.jpg',
+            'assets/images/memoire pdf page par page/page20.jpg',
+            'assets/images/memoire pdf page par page/page21.jpg',
+            'assets/images/memoire pdf page par page/page22.jpg',
+            'assets/images/memoire pdf page par page/page23.jpg',
+            'assets/images/memoire pdf page par page/page24.jpg',
+            'assets/images/memoire pdf page par page/page25.jpg',
+            'assets/images/memoire pdf page par page/page26.jpg',
+            'assets/images/memoire pdf page par page/page27.jpg',
+            'assets/images/memoire pdf page par page/page28.jpg'
         ];
 
         // Optimisation du chargement des images
@@ -1947,8 +1979,8 @@
         function getPageNumber(index) {
             const page = memoirPages[index];
             if (index === 0) return 1; // Première page seule
-            if (index === memoirPages.length - 1) return 54; // Dernière page seule
-            return `${page.number * 2 - 2}-${page.number * 2 - 1}`; // Pages doubles
+            if (index === memoirPages.length - 1) return 28; // Dernière page seule
+            return `${index + 1}`; // Pages simples
         }
 
         function openMemoirModal() {
@@ -1959,9 +1991,9 @@
 
             if (modal && pageObject && currentPageSpan && totalPagesSpan) {
                 currentPageIndex = 0;
-                pageObject.data = memoirPages[currentPageIndex].src;
+                pageObject.src = memoirPages[currentPageIndex];
                 currentPageSpan.textContent = getPageNumber(currentPageIndex);
-                totalPagesSpan.textContent = 54;
+                totalPagesSpan.textContent = 28;
                 
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
@@ -1991,24 +2023,21 @@
         }
 
         function updatePage() {
-            const pageObject = document.getElementById('memoirPage');
+            const pageImage = document.getElementById('memoirPage');
             const currentPageSpan = document.getElementById('currentPage');
             
-            if (pageObject && currentPageSpan) {
-                pageObject.data = memoirPages[currentPageIndex].src;
-                currentPageSpan.textContent = getPageNumber(currentPageIndex);
+            if (pageImage && currentPageSpan) {
+                pageImage.src = memoirPages[currentPageIndex];
+                currentPageSpan.textContent = currentPageIndex + 1;
             }
         }
 
         function goToPage(pageNumber) {
-            if (pageNumber === 1) {
-                currentPageIndex = 0;
-            } else if (pageNumber === 54) {
-                currentPageIndex = memoirPages.length - 1;
-            } else {
-                currentPageIndex = Math.ceil((pageNumber + 1) / 2);
+            const pageNum = parseInt(pageNumber);
+            if (pageNum >= 1 && pageNum <= memoirPages.length) {
+                currentPageIndex = pageNum - 1;
+                updatePage();
             }
-            updatePage();
         }
 
         // Navigation au clavier
